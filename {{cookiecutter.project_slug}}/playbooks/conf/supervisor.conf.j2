@@ -1,0 +1,87 @@
+;program_admin_start
+[program:{{proj_name}}]
+numprocs={{process_number}}
+numprocs_start=0
+process_name={{proj_name}}_%(process_num)d
+directory={{remote_proj_dir}}
+
+command={{remote_proj_dir}}/venv/bin/python {{remote_proj_dir}}/run.py --debug={{DEBUG}} --log_to_stderr=1 --logging={{log_level|default('info')}} --port=308%(process_num)01d --name=%(program_name)s_%(process_num)d
+
+environment=
+    {%- for key,value in env_items.items() -%}
+    {{ key }}="{{ value }}"
+    {%- if not loop.last %},{% endif %}
+    {%- endfor %}
+
+
+user={{ansible_env.USER}}
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile={{ansible_env.HOME}}/logs/%(program_name)s_%(process_num)s.log
+
+[program:{{proj_name}}_worker]
+directory={{remote_proj_dir}}
+
+command={{remote_proj_dir}}/venv/bin/celery -A {{proj_name}}.tasks.tasks:app worker -Q {{proj_name}}_default,{{proj_name}}_cron -l INFO -E -c 1
+
+environment=
+    {%- for key,value in env_items.items() -%}
+    {{ key }}="{{ value }}"
+    {%- if not loop.last %},{% endif %}
+    {%- endfor %}
+
+killasgroup=true
+stopasgroup=true
+user={{ansible_env.USER}}
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile={{ansible_env.HOME}}/logs/%(program_name)s_%(process_num)s.log
+
+
+
+[program:{{proj_name}}_beat]
+directory={{remote_proj_dir}}
+
+command={{remote_proj_dir}}/venv/bin/celery -A {{proj_name}}.tasks.tasks:app beat -s /tmp/celerybeat-schedule -l INFO 
+
+environment=
+    {%- for key,value in env_items.items() -%}
+    {{ key }}="{{ value }}"
+    {%- if not loop.last %},{% endif %}
+    {%- endfor %}
+
+
+user={{ansible_env.USER}}
+autostart=true
+autorestart=true
+redirect_stderr=true
+killasgroup=true
+stopasgroup=true
+stdout_logfile={{ansible_env.HOME}}/logs/%(program_name)s_%(process_num)s.log
+
+
+
+[program:{{proj_name}}_error]
+directory={{remote_proj_dir}}
+
+killasgroup=true
+stopasgroup=true
+command={{remote_proj_dir}}/venv/bin/celery -A {{proj_name}}.tasks.tasks:app worker -Q {{proj_name}}_error -l INFO -c 1 -E
+
+environment=
+    {%- for key,value in env_items.items() -%}
+    {{ key }}="{{ value }}"
+    {%- if not loop.last %},{% endif %}
+    {%- endfor %}
+
+
+user={{ansible_env.USER}}
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile={{ansible_env.HOME}}/logs/%(program_name)s_%(process_num)s.log
+
+
+

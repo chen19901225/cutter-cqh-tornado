@@ -1,0 +1,17 @@
+- name: check nginx config
+  shell: /etc/init.d/nginx configtest
+  register: test_nginx_config
+  changed_when: False
+  ignore_errors: False
+  tags: restart-nginx
+  become: yes
+  become_method: sudo
+  tags: ['nginx', 'nginx_check']
+
+- name: restart nginx
+  shell: /etc/init.d/nginx reload
+  when: test_nginx_config.stdout != "" and test_nginx_config.rc == 0
+  tags: restart-nginx
+  become: yes
+  become_method: sudo
+  tags: ['nginx', 'nginx_restart']

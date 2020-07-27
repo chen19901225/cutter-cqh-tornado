@@ -1,0 +1,21 @@
+
+- name: restart supervisor admin
+  supervisorctl:
+    name: '{{item}}'
+    state: restarted
+  with_sequence: start=0 end="{{max_process_number}}" stride=1 format="{{proj_name}}:{{proj_name}}_%d"
+  become: yes
+  become_method: sudo
+  tags: ['supervisor', 'supervisor_restart']
+
+- name: restart supervisor celery
+  supervisorctl:
+    name: '{{item}}'
+    state: 'restarted'
+  with_items:
+    - '{{proj_name}}_beat'
+    - '{{proj_name}}_worker'
+    - '{{proj_name}}_error'
+  become: yes
+  become_method: sudo
+  tags: ['supervisor', 'supervisor_restart']

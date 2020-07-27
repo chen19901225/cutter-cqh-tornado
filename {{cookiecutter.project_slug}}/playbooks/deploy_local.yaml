@@ -1,0 +1,37 @@
+- hosts: localhost
+  vars:
+    remote_proj_dir: '{{proj_dir}}'
+
+  vars_files:
+   - vars.yaml
+  tasks:
+    - include_tasks: tasks/prepare_centos.yaml
+
+    - name: create virtualenv
+      pip:
+        virtualenv: '{{remote_proj_dir}}/venv'
+        virtualenv_python: '{{ansible_env.HOME}}/envs/default/bin/python'
+        virtualenv_command: '{{ansible_env.HOME}}/.local/bin/virtualenv'
+        requirements: '{{remote_proj_dir}}/requirement.txt'
+      tags: ['prepare', 'prepare_pip']
+    - include_tasks: tasks/supervisor_copy.yaml
+      tags: ['supervisor', 'supervisor_copy']
+    - include_tasks: tasks/supervisor_restart.yaml
+      tags: ['supervisor', 'supervisor_restart']
+
+
+    - name: copy nginx conf
+      template:
+        src: '{{proj_dir}}/playbooks/conf/nginx.conf.j2'
+        dest: '/www/server/panel/vhost/nginx/{{proj_name}}.conf'
+      become: yes
+      become_method: sudo
+      tags: ['nginx', 'nginx_copy']
+
+    - include_tasks: tasks/nginx_check_and_restart.yaml
+
+
+
+
+    
+

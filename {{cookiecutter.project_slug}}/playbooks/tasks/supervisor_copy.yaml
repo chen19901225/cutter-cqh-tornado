@@ -1,0 +1,7 @@
+- name: copy supervisor template
+  template:
+    src: '{{proj_dir}}/playbooks/conf/supervisor.conf.j2'
+    dest: '/etc/supervisord.d/{{proj_name}}.ini'
+  become: yes
+  become_method: sudo
+  tags: ['supervisor', 'supervisor_copy']

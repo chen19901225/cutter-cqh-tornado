@@ -1,0 +1,57 @@
+upstream {{proj_name}} {
+    ip_hash; 
+        {% for port in range(process_number|int)%}
+                server 127.0.0.1:308{{port}} fail_timeout=1;
+        {%endfor%}
+        
+}
+
+limit_req_zone $binary_remote_addr zone={{proj_name}}_ip:10m rate=30r/s;
+server {
+        listen {{nginx_port|default('8001')}};
+        location /static {
+                limit_rate 1000k;
+                root {{remote_proj_dir}}/{{proj_name}};
+                expires      7d;
+
+        }
+        
+        # location /api {
+        #     limit_req zone={{proj_name}}_ip burst=1 nodelay;
+        #     proxy_read_timeout 1800;
+        #     proxy_pass_header Server;
+        #     proxy_set_header Host $http_host;
+        #     proxy_redirect off;
+        #     proxy_set_header X-Real-IP $remote_addr;
+        #     proxy_set_header X-Scheme $scheme;
+        #      proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for;
+        #     proxy_next_upstream error timeout invalid_header http_502 http_503;
+        #     proxy_pass http://apiend_ip;
+        # }
+        # location /report {
+        #     proxy_read_timeout 1800;
+        #     proxy_pass_header Server;
+        #     proxy_set_header Host $http_host;
+        #     proxy_redirect off;
+        #     proxy_set_header X-Real-IP $remote_addr;
+        #     proxy_set_header X-Scheme $scheme;
+        #      proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for;
+        #     proxy_next_upstream error timeout invalid_header http_502 http_503;
+        #     proxy_pass http://apiend_ip;
+        # }
+        location / {
+            proxy_read_timeout 1800;
+            proxy_pass_header Server;
+            proxy_set_header Host $http_host;
+            proxy_redirect off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Scheme $scheme;
+             proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_next_upstream error timeout invalid_header http_502 http_503;
+            proxy_pass http://{{proj_name}};
+        }
+
+        client_max_body_size 5000M;
+        access_log /www/wwwlogs/{{proj_name}}_out.log;
+        error_log /www/wwwlogs/{{proj_name}}_error.log;
+}

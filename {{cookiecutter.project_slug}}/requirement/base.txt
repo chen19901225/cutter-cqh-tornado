@@ -1,0 +1,18 @@
+-i https://mirrors.aliyun.com/pypi/simple/
+17monip
+celery==4.3.0
+gitpython
+ipip-ipdb
+jinja2
+peewee>=3.13.1, <=3.14
+pillow
+pymysql>=0.9.3, <=1.0.0
+pytz
+redis
+requests
+sphinx
+sphinx_rtd_theme
+stackprinter
+tornado==5.0.2
+xlwt
+invoke

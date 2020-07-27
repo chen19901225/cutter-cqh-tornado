@@ -1,0 +1,10 @@
+{
+    "directory": "${DIRECTORY}",
+    "command_list":[
+        {
+            "pattern": ".*\\.py",
+            "command": "${DIRECTORY}/venv/bin/inv lint-new"
+        }
+
+    ]
+}

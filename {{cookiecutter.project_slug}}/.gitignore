@@ -1,0 +1,6 @@
+venv/
+*.pyc
+_build/
+*.retry
+build/
+*.pid

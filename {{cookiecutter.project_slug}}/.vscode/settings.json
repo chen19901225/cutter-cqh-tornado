@@ -1,0 +1,25 @@
+{
+    "git.ignoreLimitWarning": true,
+    "create-terminals.commands": [
+        {
+            "name": "lint",
+            "cmd": "${workspaceRoot}/venv/bin/cqh_file_watcher  --conf=${workspaceRoot}/playbooks/file_watcher/lint.json "
+        },
+        {
+            "name": "restart",
+            "cmd": "${workspaceRoot}/venv/bin/cqh_file_watcher  --conf=${workspaceRoot}/playbooks/file_watcher/restart.json "
+        },
+        {
+            "name": "tail_web",
+            "cmd": "~/envs/default/bin/cqh_tail --pattern=~/logs/${projectName}_?.log"
+        },
+        {
+            "name": "tail_error",
+            "cmd": "~/envs/default/bin/cqh_tail --pattern=~/logs/${projectName}_error*.log"
+        },
+        {
+            "name": "tail_worker",
+            "cmd": "~/envs/default/bin/cqh_tail --pattern=~/logs/${projectName}_worker*.log"
+        }
+    ]
+}

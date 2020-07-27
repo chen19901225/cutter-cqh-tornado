@@ -1,0 +1,57 @@
+- name: install supervisor
+  yum:
+    name: '{{item}}'
+    state: present
+  with_items:
+    - 'supervisor'
+    - 'python-pip'
+  become: yes
+  become_method: sudo
+  tags: ['prepare']
+
+- name: enable supervisor
+  systemd:
+    name: 'supervisord'
+    enabled: yes
+    state: started
+  become: yes
+  become_method: sudo
+  tags: ['prepare']
+
+# - name: pip install req
+#   pip:
+#     name: '{{item}}'
+#     state: present
+#     extra_args: --user
+#   with_items:
+#     - 'configparser==3.3.0.post2'
+#     - 'zipp==1.2.0'
+
+- name: pip install something
+  pip:
+    name: 'virtualenv==16.7.9'
+    state: present
+    extra_args: --user -i https://mirrors.aliyun.com/pypi/simple/
+  tags: ['prepare']
+
+- name: create directory
+  file: path='{{ansible_env.HOME}}/{{item}}' state=directory  mode=0777
+  with_items:
+    - deploy
+    - logs
+  tags: ['prepare']
+
+- name: set acl
+  acl:
+    path: '{{ansible_env.HOME}}'
+    entity: www
+    etype: user
+    permissions: x
+    state: present
+  become: yes
+  become_method: sudo
+  tags: ['prepare']
+
+
+
+  

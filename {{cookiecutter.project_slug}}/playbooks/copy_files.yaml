@@ -1,0 +1,44 @@
+- hosts: localhost
+  vars:
+    rst_ansible_project_files_dir: '{{ansible_env.HOME}}/code/note2/rst/ansible/ansible_project/files/{{proj_name}}'
+  tasks:
+    - name: create directory
+      file:
+        path: '{{rst_ansible_project_files_dir}}'
+        state: directory
+        owner: '{{ansible_env.USER}}'
+        group: '{{ansible_env.USER}}'
+    # - name: create directory
+    #   file:
+    #     path: '{{rst_ansible_project_files_dir}}/{{item}}'
+    #     state: directory
+    #     owner: '{{ansible_env.USER}}'
+    #     group: '{{ansible_env.USER}}'
+    #   with_items:
+    #     - 'playbooks'
+    #     - 'playbooks/conf'
+    #     - 'playbooks/tasks'
+    #     - 'script'
+    #     - 'coder/upstream'
+    #     - 'coder/driver'
+    #     - 'coder/static/self/js'
+    #     - 'coder/tasks/export'
+    #     - 'coder/models/'
+    #     - 'coder/exporter/'
+
+
+
+    - name: copy_template_files_start
+      copy:
+        src: '{{proj_dir}}/{{item}}'
+        dest: '{{rst_ansible_project_files_dir}}/{{item}}'
+      with_items:
+        - '.pre-commit-config.yaml'
+        - 'tasks.py'
+    # copy_template_files_end
+    - name: sync directory
+      synchronize:
+        src: '{{proj_dir}}/{{item}}'
+        dest: '{{rst_ansible_project_files_dir}}/'
+      with_items:
+        - 'playbooks'

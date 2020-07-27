@@ -1,0 +1,16 @@
+clear_name_list:
+ - requirements
+ - tests
+ - tmp.py
+ - tasks.py
+ - tmp.txt
+ - doc.pdf
+ - doc.md
+ - tmp.php
+ - coder.sql
+DEBUG: '{{debug|default("0")}}'
+env_items:
+  SERVER_NAME: '{{server_name|default("{{cookiecutter.project_slug}}_cloud")}}'
+  NGINX_PORT: '{{nginx_port|default("8080")}}'
+  TITLE: '{{title|default("")}}'
+  SERVER_IP: '{{server_ip|default("127.0.0.1")}}'
