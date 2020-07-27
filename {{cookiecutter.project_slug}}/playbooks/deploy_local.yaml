@@ -1,3 +1,4 @@
+{%raw%}
 - hosts: localhost
   vars:
     remote_proj_dir: '{{proj_dir}}'
@@ -35,3 +36,4 @@
 
     
 
+{%endraw%}

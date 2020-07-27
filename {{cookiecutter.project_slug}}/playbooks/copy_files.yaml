@@ -1,3 +1,4 @@
+{%raw%}
 - hosts: localhost
   vars:
     rst_ansible_project_files_dir: '{{ansible_env.HOME}}/code/note2/rst/ansible/ansible_project/files/{{proj_name}}'
@@ -42,3 +43,4 @@
         dest: '{{rst_ansible_project_files_dir}}/'
       with_items:
         - 'playbooks'
+{%endraw%}        

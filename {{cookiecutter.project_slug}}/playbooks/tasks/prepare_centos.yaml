@@ -1,3 +1,4 @@
+{%raw%}
 - name: install supervisor
   yum:
     name: '{{item}}'
@@ -54,4 +55,4 @@
 
 
 
-  
+  {%endraw%}

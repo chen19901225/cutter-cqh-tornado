@@ -1,4 +1,4 @@
-
+{%raw%}
 - name: restart supervisor admin
   supervisorctl:
     name: '{{item}}'
@@ -19,3 +19,5 @@
   become: yes
   become_method: sudo
   tags: ['supervisor', 'supervisor_restart']
+
+{%endraw%}

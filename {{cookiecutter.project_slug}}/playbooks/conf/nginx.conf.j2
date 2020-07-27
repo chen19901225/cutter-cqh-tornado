@@ -1,3 +1,4 @@
+{%raw %}
 upstream {{proj_name}} {
     ip_hash; 
         {% for port in range(process_number|int)%}
@@ -55,3 +56,4 @@ server {
         access_log /www/wwwlogs/{{proj_name}}_out.log;
         error_log /www/wwwlogs/{{proj_name}}_error.log;
 }
+{%endraw%}

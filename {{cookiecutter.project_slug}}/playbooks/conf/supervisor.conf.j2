@@ -1,3 +1,4 @@
+{%raw%}
 ;program_admin_start
 [program:{{proj_name}}]
 numprocs={{process_number}}
@@ -85,3 +86,4 @@ stdout_logfile={{ansible_env.HOME}}/logs/%(program_name)s_%(process_num)s.log
 
 
 
+{%endraw%}
